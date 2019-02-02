@@ -23,7 +23,7 @@ use hyper;
 use hyper::server::{Request, Response, Service};
 use hyper::{StatusCode};
 use hyper::Method::{Get, Post};
-use hyper::header::{ContentLength, ContentType};
+use hyper::header::{Authorization, Bearer, ContentLength, ContentType};
 
 use serde_json;
 use valico::json_schema;
@@ -60,18 +60,51 @@ fn json_request_is_valid(payload: &hyper::Chunk, api: &str) -> bool {
 
 fn json_build_invalid_request_response() -> Response {
     let payload = json!({
-        "requestIsValid": false
+        "request-is-valid": false
     }).to_string();
 
     Response::new()
-        .with_status(StatusCode::BadRequest)
         .with_header(ContentLength(payload.len() as u64))
         .with_header(ContentType::json())
         .with_body(payload)
 }
 
+fn get_space_details(query: &str) -> Response {
+    let args = url::form_urlencoded::parse(&query.as_bytes())
+        .into_owned()
+        .collect::<HashMap<String, String>>();
+
+    match args.get("gid") {
+        Some(game_id) => {
+            let payload = json!({
+                "requestIsValid": true,
+                "errorReason": "not ready yet"
+            }).to_string();
+
+            Response::new()
+                .with_header(ContentLength(payload.len() as u64))
+                .with_header(ContentType::json())
+                .with_body(payload)
+        }
+        None => {
+            json_build_invalid_request_response()
+        }
+    }
+}
 
 pub struct FrontendService {
+}
+
+pub fn auth_token_is_valid(headers: &hyper::header::Headers) -> bool {
+    let response = headers.get::<Authorization<Bearer>>();
+    return match response {
+        Some(header) => {
+            ::db::retrieval::validate_token(&header.token)
+        }
+        None => {
+            false
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize)]
@@ -94,6 +127,7 @@ impl Service for FrontendService {
 
     fn call(&self, request: Request) -> Self::Future {
         info!("Received request: {:?}", request);
+        info!("Request headers: {:?}", request.headers());
 
         match (request.method(), request.path()) {
             (&Get, "/version") => {
@@ -108,6 +142,27 @@ impl Service for FrontendService {
 
                 Box::new(futures::future::ok(response))
             },
+            (&Get, "/turn/space") => {
+                if auth_token_is_valid(request.headers()) {
+                    let response = match request.query() {
+                        Some(query) => {
+                            info!("getting space details");
+                            get_space_details(query)
+                        }
+                        None => {
+                            json_build_invalid_request_response()
+                        }
+                    };
+
+                    Box::new(futures::future::ok(response))
+                }
+                else {
+                    let response = Response::new()
+                        .with_status(StatusCode::Unauthorized);
+
+                    Box::new(futures::future::ok(response))
+                }
+           },
             (&Post, "/auth/renew") => {
                 let future = request.body().concat2().and_then( |body| {
                     if json_request_is_valid(&body, "/auth/renew") {

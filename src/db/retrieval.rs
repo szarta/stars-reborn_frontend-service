@@ -88,36 +88,28 @@ pub fn get_user_name_for_id(id: i64) -> Option<String> {
     return None;
 }
 
-pub fn validate_token_for_user(name: &str, token: &str) -> bool { 
-    let result = ::db::retrieval::get_id_for_user(name);
+pub fn validate_token(token: &str) -> bool {
+    let db_filepath = configuration::get_db_filepath();
+    let connection = sqlite::open(db_filepath).unwrap();
 
-    match result {
-        Some(user_id) => {
-            let db_filepath = configuration::get_db_filepath();
-            let connection = sqlite::open(db_filepath).unwrap();
+    let mut c = connection
+        .prepare("SELECT * FROM tokens WHERE (token = ?)")
+        .unwrap();
 
-            let mut c = connection
-                .prepare("SELECT * FROM tokens WHERE (uid = ?) AND (token = ?)")
-                .unwrap();
+    c.bind(1, &sqlite::Value::String(token.to_string())).unwrap();
 
-            c.bind(1, &sqlite::Value::Integer(user_id)).unwrap();
-            c.bind(2, &sqlite::Value::String(token.to_string())).unwrap();
+    while let State::Row = c.next().unwrap() {
+        let dt = c.read::<String>(5).unwrap();
 
-            while let State::Row = c.next().unwrap() {
-                let dt = c.read::<String>(5).unwrap();
-
-                let now = Utc::now();
-                if DateTime::parse_from_rfc3339(&dt)
-                    .unwrap()
-                    .signed_duration_since(now) < Duration::seconds(1) {
-                        return false;
-                }
-                else {
-                    return true;
-                }
-            }
+        let now = Utc::now();
+        if DateTime::parse_from_rfc3339(&dt)
+            .unwrap()
+            .signed_duration_since(now) < Duration::seconds(1) {
+                return false;
         }
-        None => { return false; }
+        else {
+            return true;
+        }
     }
 
     return false;

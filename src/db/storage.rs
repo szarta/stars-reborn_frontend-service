@@ -33,7 +33,7 @@ pub fn create_db_if_necessary() {
     let connection = sqlite::open(db_filepath).unwrap();
     connection.execute(
         "
-        CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY NOT NULL, username TEXT NOT NULL, password_hash TEXT NOT NULL)
+        CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY NOT NULL, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL)
         "
     ).unwrap();
 
@@ -64,7 +64,7 @@ pub fn store_new_user(name: &str, password: &str) {
     statement.next().unwrap();
 }
 
-// can explore JWT for auth tokens, probably not needed right now as API 
+// can explore JWT for auth tokens, probably not needed right now as API
 // requestor is the same owner as this service
 
 pub fn invalidate_tokens_for_user(name: &str) {
@@ -118,7 +118,7 @@ pub fn create_auth_token(name: &str) -> Option<(String, String, String)> {
             statement.bind(4, &sqlite::Value::String(renewal_token.to_string())).unwrap();
             statement.bind(5, &sqlite::Value::String(renewal_dt.to_rfc3339())).unwrap();
             statement.next().unwrap();
-    
+
             return Some((auth_token.to_string(), renewal_token.to_string(), renewal_dt.to_string()));
         },
         None => {
