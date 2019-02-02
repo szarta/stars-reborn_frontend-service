@@ -1,0 +1,30 @@
+[package]
+name = "stars-reborn_frontend-service"
+description = "API servicer for stars-reborn frontend"
+version = "0.1.0"
+authors = ["Brandon Arrendondo <barrendo@gmail.com>"]
+
+[dependencies]
+argparse = "0.2.2"
+dotenv = "0.13.0"
+log = "0.4.1"
+env_logger = "0.6.0"
+argonautica = "0.1.5"
+chrono = "0.4.6"
+time = "0.1.42"
+rust-crypto = "0.2.36"
+
+hyper = "0.11.13"
+futures = "0.1.17"
+
+serde = "1.0.80"
+serde_json = "1.0.0"
+serde_derive = "1.0.80"
+valico = "2.0.0"
+url = "1.6.0"
+uuid = { version="0.7.0", features = ["v4"] }
+rand = "0.6.0"
+
+flate2 = "1.0"
+lazy_static = "1.2.0"
+sqlite = "0.24.0"
