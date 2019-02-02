@@ -83,8 +83,6 @@ fn main() {
     }
 
     ::db::storage::create_db_if_necessary();
-    ::db::storage::store_new_user("brandon", "test1234");
-    ::db::retrieval::validate_token_for_user("brann", "069567ec6338fb75ed66fd38b98d9953a6ce26c1364730a13b88f579687fe339");
 
     let server_addr = configuration::get_server_ip().parse().unwrap();
     let server = hyper::server::Http::new()

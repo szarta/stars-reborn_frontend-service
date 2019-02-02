@@ -156,6 +156,4 @@ pub fn renew_auth(renewal_token: &str) -> Option<(String, String, String)> {
             return None;
         }
     }
-
-    return None;
 }

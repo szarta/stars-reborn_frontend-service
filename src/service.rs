@@ -81,6 +81,7 @@ pub struct AuthPayload {
 }
 
 #[derive(Serialize, Deserialize)]
+#[allow(non_snake_case)]
 pub struct RenewPayload {
     pub renewToken: String
 }
