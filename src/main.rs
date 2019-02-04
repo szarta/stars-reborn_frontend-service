@@ -54,6 +54,10 @@ extern crate crypto;
 use dotenv::dotenv;
 use argparse::{ArgumentParser, Print};
 
+pub mod test {
+    pub mod space;
+}
+
 pub mod service;
 pub mod schemas {
     pub mod auth;
@@ -83,6 +87,7 @@ fn main() {
     }
 
     ::db::storage::create_db_if_necessary();
+    //::db::storage::store_new_user("brandon", "Test12345");
 
     let server_addr = configuration::get_server_ip().parse().unwrap();
     let server = hyper::server::Http::new()

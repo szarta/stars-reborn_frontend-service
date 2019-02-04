@@ -69,50 +69,6 @@ fn json_build_invalid_request_response() -> Response {
         .with_body(payload)
 }
 
-pub const EXAMPLE_SPACE : &str = r#"
-{
-    "bound": {
-        "xMax": 400,
-        "yMax": 400
-    },
-    "planets": [
-        {
-            "id": 0,
-            "name": "Mohlodi",
-            "loc": {
-                "x": 120,
-                "y": 50
-            },
-            "seenBefore": false
-        },
-        {
-            "id": 1,
-            "name": "Strange World",
-            "loc": {
-                "x": 300,
-                "y": 75
-            },
-            "seenBefore": true,
-            "currentData": true,
-            "relatedStarbase": true,
-            "population": 30000,
-            "currentHabVal": 75,
-            "potentialHabVal": 100,
-            "relatedOwnedFleets": [
-                "Santa Maria #2",
-                "Long Range Scout #3"
-            ],
-            "relatedFriendlyFleets": [
-                "Some Fleet #23"
-            ],
-            "relatedEnemyFleets": [
-                "Bombing Crew #40"
-            ]
-        }
-    ]
-}
-"#;
-
 fn get_space_details(query: &str) -> Response {
     let args = url::form_urlencoded::parse(&query.as_bytes())
         .into_owned()
@@ -120,7 +76,7 @@ fn get_space_details(query: &str) -> Response {
 
     match args.get("gid") {
         Some(game_id) => {
-            let payload = EXAMPLE_SPACE.to_string();
+            let payload = ::test::space::MASSIVE_TEST.to_string();
 
             Response::new()
                 .with_header(ContentLength(payload.len() as u64))
