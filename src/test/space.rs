@@ -20,12 +20,41 @@
  *  DEALINGS IN THE SOFTWARE.
  */
 //pub const TUTORIAL_SPACE : &str = r#"
-pub const MASSIVE_TEST: &str = r#"
+pub const MASSIVE_TEST_OWNED_PLANETS: &str = r#"
+{
+    "ownedPlanets": [
+        {
+            "id": 147,
+            "name": "Forest"
+        },
+        {
+            "id": 108,
+            "name": "Moonbeam"
+        },
+        {
+            "id": 165,
+            "name": "Me"
+        }
+    ]
+}
+"#;
+
+pub const MASSIVE_TEST_SPACE: &str = r#"
 {
     "bound": {
         "xMax": 2000,
         "yMax": 2000
     },
+    "scans": [
+        {
+            "origin": {
+                "y": 1167,
+                "x": 1343
+            },
+            "radius": 250,
+            "penetrating": false
+        }
+    ],
     "planets": [
         {
             "loc": {
@@ -996,6 +1025,8 @@ pub const MASSIVE_TEST: &str = r#"
                 "x": 1233
             },
             "seenBefore": true,
+            "currentValue": 100,
+            "potentialValue": 100,
             "id": 108,
             "name": "Moonbeam"
         },
@@ -1348,6 +1379,8 @@ pub const MASSIVE_TEST: &str = r#"
             },
             "seenBefore": true,
             "relatedStarbase": true,
+            "currentValue": 71,
+            "potentialValue": 80,
             "relatedFriendlyFleets": [
                 {
                     "name": "Santa Maria #1",
@@ -1518,6 +1551,8 @@ pub const MASSIVE_TEST: &str = r#"
             "seenBefore": true,
             "relatedStarbase": true,
             "id": 165,
+            "currentValue": 45,
+            "potentialValue": 65,
             "name": "Me"
         },
         {
@@ -1525,7 +1560,9 @@ pub const MASSIVE_TEST: &str = r#"
                 "y": 1476,
                 "x": 1346
             },
-            "seenBefore": false,
+            "seenBefore": true,
+            "currentValue": -9,
+            "potentialValue": -6,
             "id": 166,
             "name": "Tartaruga"
         },
