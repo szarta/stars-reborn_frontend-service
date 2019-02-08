@@ -90,27 +90,6 @@ fn get_space_details(query: &str) -> Response {
     }
 }
 
-fn get_owned_planets(query: &str) -> Response {
-    let args = url::form_urlencoded::parse(&query.as_bytes())
-        .into_owned()
-        .collect::<HashMap<String, String>>();
-
-    match args.get("gid") {
-        Some(game_id) => {
-            let payload = ::test::space::MASSIVE_TEST_OWNED_PLANETS.to_string();
-
-            Response::new()
-                .with_header(ContentLength(payload.len() as u64))
-                .with_header(ContentType::json())
-                .with_header(AccessControlAllowOrigin::Any) // TODO: replace this for security
-                .with_body(payload)
-        }
-        None => {
-            json_build_invalid_request_response()
-        }
-    }
-}
-
 pub struct FrontendService {
 }
 
@@ -162,26 +141,6 @@ impl Service for FrontendService {
 
                 Box::new(futures::future::ok(response))
             },
-            (&Get, "/turn/ownedPlanets") => {
-                if auth_token_is_valid(request.headers()) {
-                    let response = match request.query() {
-                        Some(query) => {
-                            get_owned_planets(query)
-                        },
-                        None => {
-                            json_build_invalid_request_response()
-                        }
-                    };
-
-                    Box::new(futures::future::ok(response))
-                }
-                else {
-                    let response = Response::new()
-                        .with_status(StatusCode::Unauthorized);
-
-                    Box::new(futures::future::ok(response))
-                }
-           },
             (&Get, "/turn/space") => {
                 if auth_token_is_valid(request.headers()) {
                     let response = match request.query() {

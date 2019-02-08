@@ -19,9 +19,9 @@
  *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  *  DEALINGS IN THE SOFTWARE.
  */
-//pub const TUTORIAL_SPACE : &str = r#"
-pub const MASSIVE_TEST_OWNED_PLANETS: &str = r#"
+pub const MASSIVE_TEST_SPACE: &str = r#"
 {
+    "homeworld": 165,
     "ownedPlanets": [
         {
             "id": 147,
@@ -35,12 +35,7 @@ pub const MASSIVE_TEST_OWNED_PLANETS: &str = r#"
             "id": 165,
             "name": "Me"
         }
-    ]
-}
-"#;
-
-pub const MASSIVE_TEST_SPACE: &str = r#"
-{
+    ],
     "bound": {
         "xMax": 2000,
         "yMax": 2000
@@ -51,8 +46,52 @@ pub const MASSIVE_TEST_SPACE: &str = r#"
                 "y": 1167,
                 "x": 1343
             },
-            "radius": 250,
+            "radius": 150,
             "penetrating": false
+        },
+        {
+            "origin": {
+                "y": 1094,
+                "x": 1310
+            },
+            "radius": 50,
+            "penetrating": true
+        }
+    ],
+    "fleets": [
+        {
+            "id": 1,
+            "name": "Fighting Force",
+            "loc": {
+                "y": 1100,
+                "x": 1200
+            },
+            "heading": {
+                "y": 1167,
+                "x": 1343
+            },
+            "warp": 6,
+            "quantity": 4,
+            "isOwned": false,
+            "isFriendly": false,
+            "isEnemy": true
+        },
+        {
+            "id": 2,
+            "name": "Random Team",
+            "loc": {
+                "y": 1400,
+                "x": 1400
+            },
+            "heading": {
+                "y": 1167,
+                "x": 1343
+            },
+            "warp": 6,
+            "quantity": 4,
+            "isOwned": false,
+            "isFriendly": false,
+            "isEnemy": true
         }
     ],
     "planets": [
@@ -1377,6 +1416,10 @@ pub const MASSIVE_TEST_SPACE: &str = r#"
                 "y": 1094,
                 "x": 1310
             },
+            "routeTo": {
+                "y": 1167,
+                "x": 1343
+            },
             "seenBefore": true,
             "relatedStarbase": true,
             "currentValue": 71,
@@ -1385,6 +1428,10 @@ pub const MASSIVE_TEST_SPACE: &str = r#"
                 {
                     "name": "Santa Maria #1",
                     "id": "15241"
+                },
+                {
+                    "name": "Stalwart Defender #2",
+                    "id": "41212"
                 }
             ],
             "id": 147,
